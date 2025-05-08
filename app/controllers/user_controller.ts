@@ -17,10 +17,7 @@ export default class UserController {
     const { email, password } = request.only(['email', 'password']);
     const signInResult = await UserService.signIn({ email, password, auth });
 
-    if (!signInResult.success) {
-      return response.badRequest({ message: signInResult.error })
-    }
-
+    if (!signInResult.success) return response.badRequest({ message: signInResult.error })
     const { token } = signInResult;
 
     return response.ok(token);
