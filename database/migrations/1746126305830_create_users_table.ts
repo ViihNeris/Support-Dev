@@ -5,15 +5,15 @@ export default class User extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id') // ID, chave primária
+      table.increments('id')
 
-      table.string('email').notNullable().unique() // Campo de email
-      table.string('password').notNullable() // Campo de senha
-      table.enum('role', ['manager', 'candidate']).notNullable() // Campo de role
-      table.string('full_name').nullable() // Campo de nome completo
+      table.string('email').notNullable().unique()
+      table.string('password').notNullable()
+      table.enum('role', ['manager', 'candidate']).notNullable()
+      table.string('full_name').nullable()
 
-      table.timestamp('created_at').defaultTo(this.raw('CURRENT_TIMESTAMP')) // Timestamp de criação
-      table.timestamp('updated_at').defaultTo(this.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')) // Timestamp de atualização
+      table.timestamp('created_at').defaultTo(this.raw('CURRENT_TIMESTAMP'))
+      table.timestamp('updated_at').defaultTo(this.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
     })
   }
 

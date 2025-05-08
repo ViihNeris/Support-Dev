@@ -2,43 +2,42 @@ import UserService from '#services/user_service';
 import type { HttpContext } from '@adonisjs/core/http';
 
 export default class UserController {
+  async signUp({ request, response }: HttpContext) {
+    const { email, password, fullName } = request.only(['email', 'password', 'fullName']);
 
-    async signUp({ request, response }: HttpContext) {
-        const { email, password, fullName } = request.only(['email', 'password', 'fullName']);
-
-        const data = await UserService.signUp({ email, password, fullName, role: 'manager' });
-
-        if (!data.success) {
-            return response.badRequest({ message: data.error });
-        }
-
-        return response.created({ message: 'User created successfully' });
+    const signUpResult = await UserService.signUp({ email, password, fullName, role: 'manager' });
+    if (!signUpResult.success) {
+      return response.badRequest({ message: signUpResult.error });
     }
 
-    async signIn({ request, response, auth }: HttpContext) {
-        const { email, password } = request.only(['email', 'password']);
+    return response.created({ message: 'User created successfully' });
+  }
 
-        const data = await UserService.signIn({ email, password, auth });
+  async signIn({ request, response, auth }: HttpContext) {
+    const { email, password } = request.only(['email', 'password']);
+    const signInResult = await UserService.signIn({ email, password, auth });
 
-        if (!data.success) {
-            return response.badRequest({ message: data.error })
-        }
-
-        const { token } = data;
-
-        return response.ok(token);
+    if (!signInResult.success) {
+      return response.badRequest({ message: signInResult.error })
     }
 
-    async resetPassword({ params, request, response }: HttpContext) {
-        const { token } = params;
-        const { newPassword } = request.only(['newPassword']);
-        const data = await UserService.resetPassword(token, newPassword);
+    const { token } = signInResult;
 
-        if (!data.success) {
-            return response.badRequest({ message: data.error });
-        }
+    return response.ok(token);
+  }
 
-        return response.ok({ message: 'Password reset successfully' });
+  async resetPassword({ params, request, response }: HttpContext) {
+    const { token } = params;
+    const { newPassword } = request.only(['newPassword']);
+    const resetPasswordResult = await UserService.resetPassword(token, newPassword);
+
+    if (!resetPasswordResult.success) {
+      const error = resetPasswordResult?.error;
+      console.log('Error resetting password:', error);
+      return response.badRequest({ message: error });
     }
+
+    return response.ok({ message: 'Password reset successfully' });
+  }
 
 }

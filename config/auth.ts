@@ -11,11 +11,11 @@ interface JwtContent extends BaseJwtContent {
 }
 
 const authConfig = defineConfig({
-  // Define o autenticador padrão como JWT
+  // Define the default guard as JWT
   default: 'jwt',
 
   guards: {
-    // Autenticador de sessão (web)
+    // Session guard (web)
     web: sessionGuard({
       useRememberMeTokens: false,
       provider: sessionUserProvider({
@@ -23,7 +23,7 @@ const authConfig = defineConfig({
       }),
     }),
 
-    // Autenticador JWT
+    // JWT authenticator
     jwt: jwtGuard({
       tokenExpiresIn: '1h',
       useCookies: false,

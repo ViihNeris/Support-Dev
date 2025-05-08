@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 import type { HasOne } from '@adonisjs/lucid/types/relations'
-import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeSave, afterFetch } from '@adonisjs/lucid/orm';
 import User from '#models/user'
+import { Education } from '#dto/data_received.dto'
 
 export default class JobApplication extends BaseModel {
   @column({ isPrimary: true })
@@ -32,11 +33,7 @@ export default class JobApplication extends BaseModel {
   declare zipCode: string
 
   @column()
-  declare educations: {
-    courseName: string
-    institutionName: string
-    graduationDate: string
-  }[] | string
+  declare educations: Education[] | string
 
   @column()
   declare skills: string[] | string
@@ -49,4 +46,16 @@ export default class JobApplication extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  @beforeSave()
+  public static serializeFields(application: JobApplication) {
+    application.skills = JSON.stringify(application.skills);
+    application.educations = JSON.stringify(application.educations);
+  }
+
+  @afterFetch()
+  public static deserializeFields(application: JobApplication) {
+    application.skills = JSON.parse(application.skills as unknown as string);
+    application.educations = JSON.parse(application.educations as unknown as string);
+  }
 }

@@ -21,8 +21,8 @@ export default class extends BaseSchema {
       table.string('address').notNullable()
       table.string('zip_code').notNullable()
 
-      table.json('educations').nullable() // array de objetos
-      table.json('skills').nullable() // array de strings
+      table.json('educations').nullable()
+      table.json('skills').nullable()
 
       table
         .enu('status', ['pending', 'refused', 'approved'])

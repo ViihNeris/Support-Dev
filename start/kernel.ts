@@ -41,5 +41,5 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware'), () => import('
 export const middleware = router.named({
   guest: () => import('#middleware/guest_middleware'),
   auth: () => import('#middleware/auth_middleware'),
-  managerOnly: () => import('#middleware/manager_only'),
-})
+  managerOnly: () => import('#middleware/role_middleware').then((mod) => new mod.default('manager')),
+});
