@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: Challenge API
+  version: 1.0.0
+  description: The application is a backend API that provides functionalities for user management, job applications, and access control.
+  contact:
+    name: Gabriel Rosa
+    email: contato@gabriel-rosa.com
+tags:
+  - name: user
+    description: User management operations
+  - name: job-application
+    description: Job application operations
+  - name: dashboard
+    description: Dashboard operations
+paths:
+  /users/signup:
+    post:
+      tags:
+        - user
+      summary: "Create a new user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                fullName:
+                  type: string
+      responses:
+        201:
+          description: User created successfully
+        400:
+          description: Bad request
+  /users/signin:
+    post:
+      tags:
+        - user
+      summary: "Authenticate a user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: User authenticated successfully
+        401:
+          description: Invalid credentials
+
+  /users/reset-password/{token}:
+    put:
+      tags:
+        - user
+      summary: "Reset user password"
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+      responses:
+        200:
+          description: Password reset successfully
+        400:
+          description: Invalid token or bad request
+
+  /job-application:
+    post:
+      tags:
+        - job-application
+      summary: "Create a job application"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                birthDate:
+                  type: string
+                  format: date
+                email:
+                  type: string
+                phone:
+                  type: string
+                address:
+                  type: string
+                zipCode:
+                  type: string
+                educations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      courseName:
+                        type: string
+                      institutionName:
+                        type: string
+                      graduationDate:
+                        type: string
+                        format: date
+                skills:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        201:
+          description: Job application created successfully
+        400:
+          description: Bad request
+
+  /applications/job-applications/{id}/approve:
+    put:
+      tags:
+        - job-application
+      summary: "Approve a job application"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Job application approved successfully
+        404:
+          description: Job application not found
+
+  /applications/job-applications/{id}/decline:
+    put:
+      tags:
+        - job-application
+      summary: "Decline a job application"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Job application declined successfully
+        404:
+          description: Job application not found
+
+  /dashboard:
+    get:
+      tags:
+        - dashboard
+      summary: "Get dashboard data"
+      responses:
+        200:
+          description: Dashboard data retrieved successfully
+        401:
+          description: Unauthorized
